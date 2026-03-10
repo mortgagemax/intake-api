@@ -183,13 +183,14 @@ export default async function handler(req, res) {
     const payload = req.body || {};
     const borrower = payload?.data?.borrower || {};
     const fullName = `${borrower.firstName || ""} ${borrower.lastName || ""}`.trim();
+    const recipients = process.env.TO_EMAIL.split(",");
 
     const emailResult = await resend.emails.send({
-      from: process.env.FROM_EMAIL,
-      to: [process.env.TO_EMAIL],
-      subject: `New MortgageMax Intake${fullName ? ` - ${fullName}` : ""}`,
-      html: buildHtmlEmail(payload),
-      replyTo: borrower.email || undefined
+    from: process.env.FROM_EMAIL,
+    to: recipients,
+    subject: `New MortgageMax Intake${fullName ? ` - ${fullName}` : ""}`,
+    html: buildHtmlEmail(payload),
+    replyTo: borrower.email || undefined
     });
 
     if (process.env.SEND_CONFIRMATION === "true" && borrower.email) {
