@@ -245,7 +245,7 @@ export default async function handler(req, res) {
     const emailResult = await resend.emails.send({
       from: process.env.FROM_EMAIL,
       to: recipients,
-      subject: `New MortgageMax Intake${fullName ? ` - ${fullName}` : ""}`,
+      subject: `New Pre-Application ${fullName ? ` - ${fullName}` : ""}`,
       html: buildHtmlEmail(payload),
       replyTo: borrower.email || undefined
     });
