@@ -161,11 +161,12 @@ function buildHtmlEmail(payload) {
     <h3>Comments</h3>
     <p>${esc(notes.clientComments || "")}</p>
 
-    <h3>Raw JSON</h3>
-    <pre>${esc(JSON.stringify(data, null, 2))}</pre>
-  `;
-}
-
+    `;
+  }
+  //no Need
+  // <h3>Raw JSON</h3>
+  // <pre>${esc(JSON.stringify(data, null, 2))}</pre>
+  
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
