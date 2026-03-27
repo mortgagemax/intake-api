@@ -23,6 +23,20 @@ function clientStatusLabel(value, lang = "en") {
   return "";
 }
 
+function getJobMonthlyIncome(job = {}) {
+  if (job.monthlyIncome) return job.monthlyIncome;
+  if (job.monthlySalary) return job.monthlySalary;
+
+  const hours = parseFloat(job.hoursPerWeek || 0);
+  const rate = parseFloat(job.hourlyRate || 0);
+
+  if (hours > 0 && rate > 0) {
+    return Math.round(hours * rate * 4.3333).toString();
+  }
+
+  return "";
+}
+
 function buildHtmlEmail(payload) {
   const lang = payload?.language || "en";
   const data = payload?.data || {};
@@ -57,9 +71,9 @@ function buildHtmlEmail(payload) {
           <strong>${lang === "es" ? "Actual" : "Current"}:</strong> ${esc(job.isCurrent || "")}<br>
           <strong>${lang === "es" ? "Fin" : "End"}:</strong> ${esc(job.endDate || "")}<br>
           <strong>${lang === "es" ? "Posición" : "Position"}:</strong> ${esc(job.position || "")}<br>
-          <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(
-            job.monthlyIncome || job.monthlySalary || ""
-          )}
+        <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(
+          getJobMonthlyIncome(job)
+        )}
         </li>
       `
         )
