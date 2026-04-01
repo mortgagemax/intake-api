@@ -71,8 +71,8 @@ function buildHtmlEmail(payload) {
           <strong>${lang === "es" ? "Actual" : "Current"}:</strong> ${esc(job.isCurrent || "")}<br>
           <strong>${lang === "es" ? "Fin" : "End"}:</strong> ${esc(job.endDate || "")}<br>
           <strong>${lang === "es" ? "Posición" : "Position"}:</strong> ${esc(job.position || "")}<br>
-        <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(
-          getJobMonthlyIncome(job)
+          <strong>Ownership %:</strong> ${esc(job.ownershipPct ? `${job.ownershipPct}%` : "")}<br>
+          <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(getJobMonthlyIncome(job)
         )}
         </li>
       `
