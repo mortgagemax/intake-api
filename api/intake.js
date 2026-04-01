@@ -205,31 +205,152 @@ function buildHtmlEmail(payload) {
 function buildConfirmationEmail(payload) {
   const lang = payload?.language || "en";
   const borrower = payload?.data?.borrower || {};
-  const fullName = `${borrower.firstName || ""} ${borrower.lastName || ""}`.trim();
+  const firstName = borrower.firstName || "";
+
+  const docsLink =
+    payload?.links?.documents ||
+    process.env.DOCUMENTS_LINK ||
+    "#";
+
+  const bookingLink =
+    payload?.links?.booking ||
+    process.env.BOOKING_LINK ||
+    "#";
 
   if (lang === "es") {
     return {
-      subject: "Recibimos tu pre-solicitud",
+      subject: "Recibimos tu pre-aplicación de préstamo",
       html: `
-        <h2>Gracias${borrower.firstName ? `, ${esc(borrower.firstName)}` : ""}</h2>
-        <p>Recibimos tu información correctamente.</p>
-        <p>Nuestro equipo revisará tu pre-solicitud y se pondrá en contacto contigo pronto.</p>
-        <p><strong>Nombre:</strong> ${esc(fullName)}</p>
-        <p><strong>Email:</strong> ${esc(borrower.email || "")}</p>
-        <p>Gracias por confiar en MortgageMax.</p>
+        <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 700px; margin: 0 auto;">
+          <p>Hola${firstName ? ` ${esc(firstName)}` : ""},</p>
+
+          <p>Gracias por confiar en nosotros y completar tu pre-aplicación de préstamo.</p>
+
+          <p>
+            Queremos confirmarte que hemos recibido tu información correctamente y que nuestro equipo ya se encuentra revisándola
+            para poder orientarte de la mejor manera posible.
+          </p>
+
+          <p>Tu proceso ya comenzó, y este sería el avance hasta ahora:</p>
+
+          <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin: 20px 0;">
+            <strong>Tu progreso</strong>
+            <p>✔️ Paso 1: Pre-aplicación enviada</p>
+            <p>🔄 Paso 2: Revisión de documentos (siguiente paso)</p>
+            <p>⬜ Paso 3: Análisis y estimados iniciales</p>
+            <p>⬜ Paso 4: Pre-aprobación</p>
+          </div>
+
+          <p>Ya completaste el primer paso; ahora vamos por el siguiente.</p>
+
+          <p>
+            Para continuar, necesitamos avanzar con la revisión de tus documentos. Este paso nos permite iniciar tu aplicación formal,
+            validar tu perfil financiero y brindarte una orientación mucho más clara sobre tus opciones.
+          </p>
+
+          <p>
+            <strong>Revisa la lista de documentos aquí:</strong><br>
+            <a href="${esc(docsLink)}">🔗 Lista de documentos</a>
+          </p>
+
+          <ul>
+            <li>Responder a este correo con tus documentos</li>
+            <li>Enviar un mensaje si necesitas ayuda</li>
+            <li>Llamarnos para revisar el proceso</li>
+            <li>
+              Agendar cita:
+              <a href="${esc(bookingLink)}">🔗 Agendar</a>
+            </li>
+          </ul>
+
+          <p>
+            Uno de nuestros especialistas te contactará pronto para guiarte en los siguientes pasos.
+          </p>
+
+          <p>Si tienes dudas, responde a este correo. Estamos para ayudarte.</p>
+
+          <br>
+
+          <strong>MortgageMax Team</strong><br>
+          (205) 953-1633<br>
+          girard@mortgagemax.net
+
+          <hr>
+
+          <p style="font-size: 10px; color: #6b7280;">
+          Importante: La información enviada en la pre-aplicación se utiliza como una evaluación inicial
+          y no representa una aprobación final de préstamo. Toda aprobación está sujeta a la revisión completa de 
+          documentos, verificación de crédito, ingresos, activos, empleo, valoración de la propiedad y demás requisitos 
+          del prestamista. Los términos del préstamo, incluyendo tasa de interés, pago mensual y costos de cierre, 
+          pueden cambiar una vez se complete el análisis formal.           
+          </p>
+        </div>
       `
     };
   }
 
   return {
-    subject: "We received your pre-application",
+    subject: "We received your loan pre-application",
     html: `
-      <h2>Thank you${borrower.firstName ? `, ${esc(borrower.firstName)}` : ""}</h2>
-      <p>We received your information successfully.</p>
-      <p>Our team will review your pre-application and contact you soon.</p>
-      <p><strong>Name:</strong> ${esc(fullName)}</p>
-      <p><strong>Email:</strong> ${esc(borrower.email || "")}</p>
-      <p>Thank you for choosing MortgageMax.</p>
+      <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 700px; margin: 0 auto;">
+        <p>Hello${firstName ? ` ${esc(firstName)}` : ""},</p>
+
+        <p>Thank you for trusting us and completing your loan pre-application.</p>
+
+        <p>
+          We confirm that we received your information successfully and our team is already reviewing it.
+        </p>
+
+        <p>Your process has started. Here's your progress:</p>
+
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin: 20px 0;">
+          <strong>Your progress</strong>
+          <p>✔️ Step 1: Pre-application submitted</p>
+          <p>🔄 Step 2: Document review (next step)</p>
+          <p>⬜ Step 3: Initial review and estimates</p>
+          <p>⬜ Step 4: Pre-approval</p>
+        </div>
+
+        <p>Next step: document review.</p>
+
+        <p>
+          This allows us to verify your profile and give you clearer loan options including payment estimates and closing costs.
+        </p>
+
+        <p>
+          <strong>Check the document list:</strong><br>
+          <a href="${esc(docsLink)}">🔗 Document checklist</a>
+        </p>
+
+        <ul>
+          <li>Reply to this email with documents</li>
+          <li>Text us for help</li>
+          <li>Call us for guidance</li>
+          <li>
+            Schedule a call:
+            <a href="${esc(bookingLink)}">🔗 Schedule</a>
+          </li>
+        </ul>
+
+        <p>A specialist will reach out shortly to guide you.</p>
+
+        <p>If you have questions, just reply to this email.</p>
+
+        <br>
+
+        <strong>MortgageMax Team</strong><br>
+        (205) 953-1633<br>
+        girard@mortgagemax.net
+
+        <hr>
+        <p style="font-size: 10px; color: #6b7280;">
+          Important: The information submitted in the pre-application is used as an initial evaluation
+          and does not represent a final loan approval. All approvals are subject to full review of
+          documents, verification of credit, income, assets, employment, property appraisal, and any other
+          lender requirements. Loan terms, including interest rate, monthly payment, and closing costs,
+          may change once the formal review is completed.
+        </p>
+      </div>
     `
   };
 }
