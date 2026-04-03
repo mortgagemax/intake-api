@@ -373,12 +373,16 @@ export default async function handler(req, res) {
     const payload = req.body || {};
     const borrower = payload?.data?.borrower || {};
     const fullName = `${borrower.firstName || ""} ${borrower.lastName || ""}`.trim();
-    const recipients = (process.env.TO_EMAIL || "")
-    const reply_to = (process.env.REPLY_TO || "")
 
-      .split(",")
-      .map((email) => email.trim())
-      .filter(Boolean);
+    const recipients = (process.env.TO_EMAIL || "")
+        .split(",")
+        .map((email) => email.trim())
+        .filter(Boolean);
+
+    const replyToList = (process.env.REPLY_TO || "")
+        .split(",")
+        .map((email) => email.trim())
+        .filter(Boolean);
 
     const emailResult = await resend.emails.send({
       from: process.env.FROM_EMAIL,
@@ -393,10 +397,10 @@ export default async function handler(req, res) {
 
       await resend.emails.send({
         from: process.env.FROM_EMAIL,
-        to: [borrower.email],
+        to: borrower.email,
         subject: confirmation.subject,
         html: confirmation.html,
-        replyTo : reply_to
+        replyTo: replyToList.length ? replyToList : undefined
       });
     }
 
