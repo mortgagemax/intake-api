@@ -396,7 +396,7 @@ export default async function handler(req, res) {
         to: [borrower.email],
         subject: confirmation.subject,
         html: confirmation.html,
-        reply_to : reply_to
+        replyTo : reply_to
       });
     }
 
