@@ -60,26 +60,27 @@ function buildHtmlEmail(payload) {
       ? `<p><strong>${lang === "es" ? "¿Tiene realtor?" : "Has realtor"}:</strong> ${lang === "es" ? "Sí" : "Yes"}<br>
          <strong>${lang === "es" ? "Nombre del realtor" : "Realtor name"}:</strong> ${esc(borrower.realtorName || "")}</p>`
       : `<p><strong>${lang === "es" ? "¿Tiene realtor?" : "Has realtor"}:</strong> ${lang === "es" ? "No" : "No"}</p>`;
-
-  const jobsHtml = jobs.length
-    ? `<ul>${jobs
-        .map(
-          (job) => `
-        <li>
-          <strong>${esc(job.type || "")}</strong> — ${esc(job.employerName || "")}<br>
-          <strong>${lang === "es" ? "Inicio" : "Start"}:</strong> ${esc(job.startDate || "")}<br>
-          <strong>${lang === "es" ? "Actual" : "Current"}:</strong> ${esc(job.isCurrent || "")}<br>
-          <strong>${lang === "es" ? "Fin" : "End"}:</strong> ${esc(job.endDate || "")}<br>
-          <strong>${lang === "es" ? "Posición" : "Position"}:</strong> ${esc(job.position || "")}<br>
-          <strong>${lang === "es" ? "Horas por semana" : "Hours per week"}:</strong> ${esc(job.hoursPerWeek || "")}<br>
-          <strong>${lang === "es" ? "Pago por hora" : "Hourly rate"}:</strong> ${esc(job.hourlyRate ? `$${job.hourlyRate}` : "")}<br>
-          <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(getJobMonthlyIncome(job))}
-          <strong> Ownership %: </strong> ${esc(job.ownershipPct ? `${job.ownershipPct}%` : "")} <br>
-        </li>
-      `
-        )
-        .join("")}</ul>`
-    : `<p>${lang === "es" ? "No se enviaron empleos." : "No jobs submitted."}</p>`;
+const jobsHtml = jobs.length
+  ? jobs
+      .map(
+        (job) => `
+      <div style="margin-bottom: 16px;">
+        <strong>${lang === "es" ? "Tipo de Empleo" : "Employment Type"}:</strong> ${esc(job.type || "")}<br>
+        <strong>${lang === "es" ? "Empleador" : "Employer"}:</strong> ${esc(job.employerName || "")}<br>
+        <strong>${lang === "es" ? "Inicio" : "Start"}:</strong> ${esc(job.startDate || "")}<br>
+        <strong>${lang === "es" ? "Actual" : "Current"}:</strong> ${esc(job.isCurrent || "")}<br>
+        <strong>${lang === "es" ? "Fin" : "End"}:</strong> ${esc(job.endDate || "")}<br>
+        <strong>${lang === "es" ? "Posición" : "Position"}:</strong> ${esc(job.position || "")}<br>
+        <strong>${lang === "es" ? "Horas por semana" : "Hours per week"}:</strong> ${esc(job.hoursPerWeek || "")}<br>
+        <strong>${lang === "es" ? "Pago por hora" : "Hourly rate"}:</strong> ${esc(job.hourlyRate ? `$${job.hourlyRate}` : "")}<br>
+        <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(getJobMonthlyIncome(job))}<br>
+        <strong>Ownership %:</strong> ${esc(job.ownershipPct ? `${job.ownershipPct}%` : "")}<br>
+      </div>
+      <hr style="margin: 12px 0; border: none; border-top: 1px solid #e5e7eb;" />
+    `
+      )
+      .join("")
+  : `<p>${lang === "es" ? "No se enviaron empleos." : "No jobs submitted."}</p>`;
 
   const debtsHtml = debts.some((d) => d?.name || d?.balance || d?.monthlyPayment)
     ? `<ul>${debts
