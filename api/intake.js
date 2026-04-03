@@ -71,9 +71,10 @@ function buildHtmlEmail(payload) {
           <strong>${lang === "es" ? "Actual" : "Current"}:</strong> ${esc(job.isCurrent || "")}<br>
           <strong>${lang === "es" ? "Fin" : "End"}:</strong> ${esc(job.endDate || "")}<br>
           <strong>${lang === "es" ? "Posición" : "Position"}:</strong> ${esc(job.position || "")}<br>
-          <strong>Ownership %:</strong> ${esc(job.ownershipPct ? `${job.ownershipPct}%` : "")}<br>
-          <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(getJobMonthlyIncome(job)
-        )}
+          <strong>${lang === "es" ? "Horas por semana" : "Hours per week"}:</strong> ${esc(job.hoursPerWeek || "")}<br>
+          <strong>${lang === "es" ? "Pago por hora" : "Hourly rate"}:</strong> ${esc(job.hourlyRate ? `$${job.hourlyRate}` : "")}<br>
+          <strong>${lang === "es" ? "Ingreso mensual" : "Monthly income"}:</strong> ${esc(getJobMonthlyIncome(job))}
+          <strong> Ownership %: </strong> ${esc(job.ownershipPct ? `${job.ownershipPct}%` : "")} <br>
         </li>
       `
         )
@@ -373,6 +374,8 @@ export default async function handler(req, res) {
     const borrower = payload?.data?.borrower || {};
     const fullName = `${borrower.firstName || ""} ${borrower.lastName || ""}`.trim();
     const recipients = (process.env.TO_EMAIL || "")
+    const reply_to = (process.env.REPLY_TO || "")
+
       .split(",")
       .map((email) => email.trim())
       .filter(Boolean);
@@ -392,7 +395,8 @@ export default async function handler(req, res) {
         from: process.env.FROM_EMAIL,
         to: [borrower.email],
         subject: confirmation.subject,
-        html: confirmation.html
+        html: confirmation.html,
+        reply_to : reply_to
       });
     }
 
