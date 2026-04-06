@@ -385,17 +385,24 @@ export default async function handler(req, res) {
         .map((email) => email.trim())
         .filter(Boolean);
 
+   const attachments = payload?.pdfAttachment?.base64
+    ? [
+        {
+          filename: payload.pdfAttachment.filename,
+          content: payload.pdfAttachment.base64
+        }
+      ]
+    : undefined;
+
     const emailResult = await resend.emails.send({
       from: process.env.FROM_EMAIL,
       to: recipients,
       subject: `New Pre-Application ${fullName ? ` - ${fullName}` : ""}`,
       html: buildHtmlEmail(payload),
       replyTo: borrower.email || undefined,
-      attachments: [
-      {
-        filename: payload.pdfAttachment.filename,
-        content: payload.pdfAttachment.base64
-      }], 
+      html: buildHtmlEmail(payload),
+      replyTo: borrower.email || undefined,
+      ...(attachments ? { attachments } : {})
     }); 
 
     if (process.env.SEND_CONFIRMATION === "true" && borrower.email) {
@@ -406,12 +413,8 @@ export default async function handler(req, res) {
         to: borrower.email,
         subject: confirmation.subject,
         html: confirmation.html,
-        attachments: [
-        {
-          filename: payload.pdfAttachment.filename,
-          content: payload.pdfAttachment.base64
-        }],
-        replyTo: replyToList.length ? replyToList : undefined
+        replyTo: replyToList.length ? replyToList : undefined,
+        ...(attachments ? { attachments } : {})
       });
     }
 
