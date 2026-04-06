@@ -390,8 +390,13 @@ export default async function handler(req, res) {
       to: recipients,
       subject: `New Pre-Application ${fullName ? ` - ${fullName}` : ""}`,
       html: buildHtmlEmail(payload),
-      replyTo: borrower.email || undefined
-    });
+      replyTo: borrower.email || undefined,
+      attachments: [
+      {
+        filename: payload.pdfAttachment.filename,
+        content: payload.pdfAttachment.base64
+      }], 
+    }); 
 
     if (process.env.SEND_CONFIRMATION === "true" && borrower.email) {
       const confirmation = buildConfirmationEmail(payload);
@@ -401,6 +406,11 @@ export default async function handler(req, res) {
         to: borrower.email,
         subject: confirmation.subject,
         html: confirmation.html,
+        attachments: [
+        {
+          filename: payload.pdfAttachment.filename,
+          content: payload.pdfAttachment.base64
+        }],
         replyTo: replyToList.length ? replyToList : undefined
       });
     }
