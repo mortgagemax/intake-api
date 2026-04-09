@@ -219,6 +219,11 @@ function buildConfirmationEmail(payload) {
     process.env.BOOKING_LINK ||
     "#";
 
+    const contactLink =
+    payload?.links?.contact ||
+    process.env.CONTACT_LINK ||
+    "#";
+
   if (lang === "es") {
     return {
       subject: "Recibimos tu pre-aplicación de préstamo",
@@ -256,20 +261,26 @@ function buildConfirmationEmail(payload) {
           </p>
 
           <ul>
-            <li>Responder a este correo con tus documentos</li>
-            <li>Enviar un mensaje si necesitas ayuda</li>
-            <li>Llamarnos para revisar el proceso</li>
+            <li>Responde a este correo con tus documentos</li>
+            <li>Envianos un mensaje si necesitas ayuda</li>
+            <li>Llamanos para revisar el proceso</li>
             <li>
               Agendar cita:
               <a href="${esc(bookingLink)}">🔗 Agendar</a>
             </li>
           </ul>
 
+
           <p>
             Uno de nuestros especialistas te contactará pronto para guiarte en los siguientes pasos.
           </p>
 
-          <p>Si tienes dudas, responde a este correo. Estamos para ayudarte.</p>
+          <p>Si tienes dudas, responde a este correo o contactanos. Estamos para ayudarte.</p>
+
+          <p>
+            <strong>Contáctanos:</strong><br>
+            <a href="${esc(contactLink)}">Contacto</a>
+          </p>
 
           <br>
 
@@ -336,7 +347,11 @@ function buildConfirmationEmail(payload) {
 
         <p>A specialist will reach out shortly to guide you.</p>
 
-        <p>If you have questions, just reply to this email.</p>
+        <p>If you have questions, just reply to this email or contact us.</p>
+        <p>
+          <strong>Contact us:</strong><br>
+          <a href="${esc(contactLink)}">Contact us</a>
+        </p>
 
         <br>
 
@@ -400,11 +415,9 @@ export default async function handler(req, res) {
       subject: `New Pre-Application ${fullName ? ` - ${fullName}` : ""}`,
       html: buildHtmlEmail(payload),
       replyTo: borrower.email || undefined,
-      html: buildHtmlEmail(payload),
-      replyTo: borrower.email || undefined,
       ...(attachments ? { attachments } : {})
-    }); 
-
+    });
+     
     if (process.env.SEND_CONFIRMATION === "true" && borrower.email) {
       const confirmation = buildConfirmationEmail(payload);
 
